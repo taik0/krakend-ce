@@ -64,7 +64,7 @@ jobs:
             *.deb
             *.rpm
             checksums.txt
-          key: {{version}}-artifacts
+          key: ${{github.ref}}-artifacts
   upload:
     name: Upload release-artifacts
     runs-on: ubuntu-20.04
@@ -80,7 +80,7 @@ jobs:
             *.deb
             *.rpm
             checksums.txt
-          key: {{version}}-artifacts
+          key: ${{github.ref}}-artifacts
       - name: Upload the artifacts
         uses: skx/github-action-publish-binaries@master
         env:
