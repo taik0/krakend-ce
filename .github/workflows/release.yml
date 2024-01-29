@@ -124,8 +124,8 @@ jobs:
          sha512sum $i >> checksums.txt;
          done
       - name: Cache artifacts
-        uses: actions/cache/save@v4
         id: cache
+        uses: actions/cache/save@v4
         with:
           path: |
             *.tar.gz
@@ -133,15 +133,15 @@ jobs:
             *.deb
             *.rpm
             checksums.txt
-          key: {{version}}-artifacts
+          key: ${{github.ref}}-artifacts
   upload:
     name: Upload release-artifacts
     runs-on: ubuntu-20.04
     needs: generate
     steps:
       - name: Restore cache
-        use: actions/cache/restore@v4
         id: cache-restore
+        uses: actions/cache/restore@v4
         with:
           path: |
             *.tar.gz
@@ -149,7 +149,7 @@ jobs:
             *.deb
             *.rpm
             checksums.txt
-          key: {{version}}-artifacts
+          key: ${{github.ref}}-artifacts
       - name: Upload the artifacts
         uses: skx/github-action-publish-binaries@master
         env:
