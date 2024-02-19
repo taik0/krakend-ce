@@ -93,4 +93,6 @@ jobs:
           # actions/cache compatible properties: https://github.com/actions/cache
           key: aptly-test
           path: |
-            *.json
+            *.tar.gz
+            *.deb
+            *.rpm
