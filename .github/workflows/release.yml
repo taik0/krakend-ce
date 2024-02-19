@@ -79,7 +79,10 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: |
+            *.tar.gz
+            *.asc
             *.deb
+            *.rpm
           key: ${{github.ref}}-artifacts
       - name: Cache s3 test
         uses: tespkg/actions-cache/save@v1
@@ -90,4 +93,4 @@ jobs:
           # actions/cache compatible properties: https://github.com/actions/cache
           key: aptly-test
           path: |
-            *.deb
+            *.json
