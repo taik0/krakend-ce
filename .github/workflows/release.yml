@@ -84,15 +84,26 @@ jobs:
             *.deb
             *.rpm
           key: ${{github.ref}}-artifacts
-      - name: Cache s3 test
+      - name: Restore aptly cache
+        uses: tespkg/actions-cache/restore@v1
+        with:
+          accessKey: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secretKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          bucket: ${{ secrets.AWS_S3_BUCKET_NAME }}
+          key: aptly-cache
+      - name: update deb package
+        uses: docker://krakend/aptly:latest
+        with:
+          args: sh -c "aptly-krakend repo add repo.krakend.io;
+            aptly-krakend snapshot create repo.krakend.io-${{ github.ref_name }} from repo repo.krakend.io;
+            aptly-krakend publish update stable s3:krakend:"
+      - name: Save aptly cache
         uses: tespkg/actions-cache/save@v1
         with:
           accessKey: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secretKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           bucket: ${{ secrets.AWS_S3_BUCKET_NAME }}
-          # actions/cache compatible properties: https://github.com/actions/cache
-          key: aptly-test
+          key: aptly-cache
           path: |
-            *.tar.gz
-            *.deb
-            *.rpm
+            .aptly
+            .aptly.conf
