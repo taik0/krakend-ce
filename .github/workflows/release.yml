@@ -91,12 +91,15 @@ jobs:
           secretKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           bucket: ${{ secrets.AWS_S3_BUCKET_NAME }}
           key: aptly-cache
+          path: |
+            .aptly
+            .aptly.conf
       - name: update deb package
         uses: docker://krakend/aptly:latest
         with:
-          args: sh -c "aptly-krakend repo add repo.krakend.io;
-            aptly-krakend snapshot create repo.krakend.io-${{ github.ref_name }} from repo repo.krakend.io;
-            aptly-krakend publish update stable s3:krakend:"
+          args: sh -c "aptly-krakend -config=./aptly.conf repo add repo.krakend.io;
+            aptly-krakend -config=./aptly.conf snapshot create repo.krakend.io-${{ github.ref_name }} from repo repo.krakend.io;
+            aptly-krakend -config=./aptly.conf publish update stable s3:krakend:"
       - name: Save aptly cache
         uses: tespkg/actions-cache/save@v1
         with:
