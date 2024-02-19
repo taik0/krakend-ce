@@ -81,13 +81,13 @@ jobs:
           path: |
             *.deb
           key: ${{github.ref}}-artifacts
-      - name: Cache multiple paths
-        uses: whywaita/actions-cache-s3/save@v2
+      - name: Cache s3 test
+        uses: tespkg/actions-cache/save@v1
         with:
+          accessKey: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secretKey: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          bucket: ${{ secrets.AWS_S3_BUCKET_NAME }}
+          # actions/cache compatible properties: https://github.com/actions/cache
+          key: aptly-test
           path: |
             *.deb
-          key: aptly-test
-          aws-s3-bucket: ${{ secrets.AWS_S3_BUCKET_NAME }}
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
