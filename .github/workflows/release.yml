@@ -69,3 +69,25 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           args: '*.tar.gz *.asc *.deb *.rpm checksums.txt'
+  debrepo:
+    name: Upload deb to apt-repo
+    runs-on: ubuntu-20.04
+    needs: generate
+    steps:
+      - name: Restore cache
+        id: cache-restore-deb
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            *.deb
+          key: ${{github.ref}}-artifacts
+      - name: Cache multiple paths
+        uses: whywaita/actions-cache-s3/save@v2
+        with:
+          path: |
+            *.deb
+          key: aptly-test
+          aws-s3-bucket: ${{ secrets.AWS_S3_BUCKET_NAME }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
