@@ -105,7 +105,7 @@ jobs:
             gpg --import pgp.key && rm pgp.key;
             aptly-krakend -config=./aptly.conf repo add repo.krakend.io *.deb;
             aptly-krakend -config=./aptly.conf snapshot create repo.krakend.io-${{ github.ref_name }} from repo repo.krakend.io;
-            aptly-krakend -config=./aptly.conf publish update stable s3:krakend:"
+            aptly-krakend -config=./aptly.conf publish snapshot repo.krakend.io-${{ github.ref_name }} s3:krakend:"
       - name: Save aptly cache
         uses: tespkg/actions-cache/save@v1
         with:
