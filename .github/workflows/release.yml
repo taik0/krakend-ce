@@ -106,8 +106,8 @@ jobs:
           args: |
             sh -c "echo '${{ secrets.PGP_SIGNING_KEY }}' > pgp.key;
             gpg --import pgp.key && rm pgp.key;
-            aptly-krakend -config=./aptly.conf repo add repo.krakend.io *.deb;
-            aptly-krakend -config=./aptly.conf snapshot create repo.krakend.io-${{ github.ref_name }} from repo repo.krakend.io;
+            aptly-krakend -config=./aptly.conf repo add repo.krakend.io *.deb && \
+            aptly-krakend -config=./aptly.conf snapshot create repo.krakend.io-${{ github.ref_name }} from repo repo.krakend.io && \
             aptly-krakend -config=./aptly.conf publish switch stable s3:krakend: repo.krakend.io-${{ github.ref_name }}"
       - name: Save aptly cache
         uses: tespkg/actions-cache/save@v1
